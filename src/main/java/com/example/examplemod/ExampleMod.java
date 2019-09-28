@@ -46,6 +46,15 @@ public class ExampleMod
                     event.getEntity().posY,
                     event.getEntity().posZ,
                     false));
+
+            // Make an explosion
+            world.createExplosion(
+                    event.getEntity(),
+                    event.getEntity().posX,
+                    event.getEntity().posY,
+                    event.getEntity().posZ,
+                    8,
+                    true);
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
