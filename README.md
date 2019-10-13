@@ -81,3 +81,14 @@ world.createExplosion(
         true);
 ```
 
+## Package jar
+
+1. Set `group` and `archivesBaseName` in `build.gradle`
+2. Execute `tasks > build > build` (don't use `jar`)
+3. Extract built jar from `build/libs` directory
+
+## Run with Forge
+
+1. Copy mod into Forge mods directory
+2. Start Forge from Minecraft launcher
+
