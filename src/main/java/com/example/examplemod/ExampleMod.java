@@ -4,6 +4,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -27,33 +30,38 @@ public class ExampleMod
     @SubscribeEvent
     public void onHurt(LivingHurtEvent event) {
         try {
-            if (event.getSource().getImmediateSource() instanceof EntityPlayer) {
-                Entity attacker = event.getSource().getImmediateSource();
+            Entity attacker = event.getSource().getImmediateSource();
+            if (attacker instanceof EntityPlayer) {
                 Entity injured = event.getEntity();
                 DamageSource injury = event.getSource();
 
-                LOGGER.info(">>> " + (attacker != null ? attacker.getName().getString() : "The world") +
+                LOGGER.info(">>> " + attacker.getName().getString() +
                         " hurt " + injured.getName().getString() +
                         " with " + injury.getDamageType());
 
                 World world = event.getEntityLiving().getEntityWorld();
+                EntityPlayer player = (EntityPlayer) attacker;
+                ItemStack mainHandIemStack = player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
 
-                // Summon lightning
-                world.addWeatherEffect(new EntityLightningBolt(
-                        world,
-                        event.getEntity().posX,
-                        event.getEntity().posY,
-                        event.getEntity().posZ,
-                        false));
+                if (mainHandIemStack.getItem().equals(Items.GOLDEN_AXE)) {
 
-                // Make an explosion
-                world.createExplosion(
-                        event.getEntity(),
-                        event.getEntity().posX,
-                        event.getEntity().posY,
-                        event.getEntity().posZ,
-                        8,
-                        true);
+                    // Summon lightning
+                    world.addWeatherEffect(new EntityLightningBolt(
+                            world,
+                            event.getEntity().posX,
+                            event.getEntity().posY,
+                            event.getEntity().posZ,
+                            false));
+
+                    // Make an explosion
+                    world.createExplosion(
+                            event.getEntity(),
+                            event.getEntity().posX,
+                            event.getEntity().posY,
+                            event.getEntity().posZ,
+                            8,
+                            true);
+                }
             }
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
