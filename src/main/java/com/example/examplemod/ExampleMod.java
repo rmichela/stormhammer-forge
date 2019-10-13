@@ -2,6 +2,11 @@ package com.example.examplemod;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.block.Block;
+import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,6 +36,16 @@ public class ExampleMod
             LOGGER.info(">>> " + (attacker != null ? attacker.getName().getString() : "The world") +
                     " hurt " + injured.getName().getString() +
                     " with " + injury.getDamageType());
+
+            World world = event.getEntityLiving().getEntityWorld();
+
+            // Summon lightning
+            world.addWeatherEffect(new EntityLightningBolt(
+                    world,
+                    event.getEntity().posX,
+                    event.getEntity().posY,
+                    event.getEntity().posZ,
+                    false));
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
