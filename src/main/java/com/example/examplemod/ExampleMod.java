@@ -43,7 +43,8 @@ public class ExampleMod
                 EntityPlayer player = (EntityPlayer) attacker;
                 ItemStack mainHandIemStack = player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
 
-                if (mainHandIemStack.getItem().equals(Items.GOLDEN_AXE)) {
+                if (mainHandIemStack.getItem().equals(Items.GOLDEN_AXE) &&
+                        mainHandIemStack.getDisplayName().getString().equalsIgnoreCase("stormbreaker")) {
 
                     // Summon lightning
                     world.addWeatherEffect(new EntityLightningBolt(
