@@ -23,12 +23,16 @@ public class ExampleMod
 
     @SubscribeEvent
     public void onHurt(LivingHurtEvent event) {
-        Entity attacker = event.getSource().getImmediateSource();
-        Entity injured = event.getEntity();
-        DamageSource injury = event.getSource();
+        try {
+            Entity attacker = event.getSource().getImmediateSource();
+            Entity injured = event.getEntity();
+            DamageSource injury = event.getSource();
 
-        LOGGER.info(">>> " + attacker.getName().getString() +
-                " hurt " + injured.getName().getString() +
-                " with " + injury.getDamageType());
+            LOGGER.info(">>> " + (attacker != null ? attacker.getName().getString() : "The world") +
+                    " hurt " + injured.getName().getString() +
+                    " with " + injury.getDamageType());
+        } catch (Exception ex) {
+            LOGGER.error(ex.getMessage(), ex);
+        }
     }
 }
