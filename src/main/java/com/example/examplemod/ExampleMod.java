@@ -2,17 +2,18 @@ package com.example.examplemod;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.block.Block;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("stormhammer")
@@ -47,16 +48,27 @@ public class ExampleMod
                     event.getEntity().posZ,
                     false));
 
-            // Make an explosion
-            world.createExplosion(
-                    event.getEntity(),
-                    event.getEntity().posX,
-                    event.getEntity().posY,
-                    event.getEntity().posZ,
-                    8,
-                    true);
+            explodeQueue.add(event.getEntity());
         } catch (Exception ex) {
             LOGGER.error(ex.getMessage(), ex);
+        }
+    }
+
+    private Queue<Entity> explodeQueue = new ConcurrentLinkedDeque<>();
+
+    @SubscribeEvent
+    public void onTick(TickEvent.WorldTickEvent event) {
+        World world = event.world;
+        Entity entity = explodeQueue.poll();
+        if(entity != null) {
+            // Make an explosion
+            world.createExplosion(
+                    entity,
+                    entity.posX,
+                    entity.posY,
+                    entity.posZ,
+                    8,
+                    true);
         }
     }
 }
